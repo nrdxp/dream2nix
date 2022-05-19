@@ -18,7 +18,6 @@
     noDev,
     ...
   } @ args: let
-    b = builtins;
     dev = ! noDev;
     name = project.name;
     relPath = project.relPath;
@@ -107,7 +106,7 @@
         then
           if dObj ? integrity
           then
-            b.trace (
+            builtins.trace (
               "Warning: Using git despite integrity exists for"
               + "${finalObj.name}"
             )
@@ -192,10 +191,10 @@
                       # handle missing lock file entry
                       let
                         versionMatch =
-                          b.match ''.*\^([[:digit:]|\.]+)'' versionSpec;
+                          builtins.match ''.*\^([[:digit:]|\.]+)'' versionSpec;
                       in {
                         inherit name;
-                        version = b.elemAt versionMatch 0;
+                        version = builtins.elemAt versionMatch 0;
                       }
                     else {inherit name version;}
                 )
@@ -221,14 +220,14 @@
                 owner = lib.elemAt githubUrlInfos 3;
                 repo = lib.elemAt githubUrlInfos 4;
               in
-                if b.length githubUrlInfos == 7
+                if builtins.length githubUrlInfos == 7
                 then let
                   rev = lib.elemAt githubUrlInfos 6;
                 in {
                   url = "https://github.com/${owner}/${repo}";
                   inherit rev;
                 }
-                else if b.length githubUrlInfos == 5
+                else if builtins.length githubUrlInfos == 5
                 then let
                   urlAndRev = lib.splitString "#" rawObj.resolved;
                 in {
@@ -252,7 +251,7 @@
                 path =
                   lib.last (lib.splitString "@file:" rawObj.yarnName);
               }
-              else throw "unknown path format ${b.toJSON rawObj}"
+              else throw "unknown path format ${builtins.toJSON rawObj}"
             else # type == "http"
               {
                 type = "http";
